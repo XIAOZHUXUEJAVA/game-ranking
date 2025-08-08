@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #111418;
+  --foreground: #e8e8e8;
 }
 
 @theme inline {
@@ -12,15 +12,87 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Pixel CJK font (Zpix) for Chinese glyph coverage */
+@font-face {
+  font-family: "Zpix";
+  src: url("https://cdn.jsdelivr.net/gh/SolidZORO/zpix-pixel-font@1.2.1/dist/zpix.woff2")
+      format("woff2"),
+    url("https://cdn.jsdelivr.net/gh/SolidZORO/zpix-pixel-font@1.2.1/dist/zpix.woff")
+      format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Retro font stack: Latin uses Press Start 2P; CJK falls back to Zpix */
+.font-retro {
+  font-family: var(--font-press-start), "Zpix", var(--font-geist-sans), Arial,
+    sans-serif;
+}
+
+/* Lock to darkish retro theme by default; users can still override if needed */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0e1116;
+    --foreground: #f0f0f0;
   }
 }
 
 body {
-  background: var(--background);
+  background: radial-gradient(
+      1200px 600px at 50% -10%,
+      rgba(255, 255, 255, 0.04),
+      transparent 60%
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.1)),
+    var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+}
+
+/* CRT scanlines overlay */
+.crt-overlay::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.06) 0px,
+    rgba(255, 255, 255, 0.06) 1px,
+    transparent 2px,
+    transparent 4px
+  );
+  mix-blend-mode: overlay;
+  opacity: 0.15;
+}
+
+/* Pixel-like shadows for containers */
+.pixel-shadow {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25), 4px 4px 0 0 rgba(0, 0, 0, 0.35);
+}
+
+/* Accent headers in retro tone */
+.retro-title {
+  letter-spacing: 1px;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+
+/* Buttons subtle press effect */
+.nes-btn:active {
+  transform: translateY(1px);
+}
+
+/* Ensure NES components also use our retro+CJK stack */
+.nes-container,
+.nes-btn,
+.nes-badge,
+.nes-balloon,
+.nes-list,
+.nes-text,
+.nes-field,
+.nes-input {
+  font-family: var(--font-press-start), "Zpix", var(--font-geist-sans), Arial,
+    sans-serif !important;
 }
