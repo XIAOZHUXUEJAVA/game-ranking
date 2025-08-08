@@ -8,7 +8,7 @@ import { ExportImageButton } from "@/components/ExportImageButton";
 
 export default function TiersPage() {
   const { addToTier, clearTiers } = useRankingStore();
-  const boardRef = useRef<HTMLDivElement>(null);
+  const boardRef = useRef<HTMLElement>(null);
 
   return (
     <div className="container mx-auto p-4 space-y-4">
