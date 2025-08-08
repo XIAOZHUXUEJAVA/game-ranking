@@ -2,22 +2,26 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="container mx-auto p-6 space-y-8">
-      {/* Hero */}
-      <section className="nes-container is-dark with-title pixel-shadow">
+    <div className="container mx-auto p-6 space-y-10">
+      {/* HERO */}
+      <section className="relative overflow-hidden nes-container is-dark with-title pixel-shadow">
         <p className="title">欢迎</p>
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div
+          className="absolute -top-10 -right-10 opacity-10 text-[160px] select-none"
+          aria-hidden
+        >
+          ★
+        </div>
+        <div className="grid md:grid-cols-2 gap-8 items-center">
           <div>
-            <h1
-              className="retro-title text-2xl md:text-3xl mb-2"
-              style={{ fontFamily: "var(--font-press-start)" }}
-            >
+            <h1 className="retro-title text-3xl md:text-4xl leading-tight">
               RANK GAME
             </h1>
-            <p className="opacity-80 text-sm md:text-base">
-              创建你的游戏 Top 排行或梯队划分，拖拽调整，导出图片，一键分享。
+            <p className="mt-3 opacity-80 text-sm md:text-base">
+              复古像素风的游戏排行工具：支持 Top
+              排行与梯队划分，拖拽即排，导出即分享。
             </p>
-            <div className="mt-4 flex flex-wrap gap-3">
+            <div className="mt-5 flex flex-wrap gap-3">
               <Link className="nes-btn is-primary" href="/top">
                 进入 Top 模式
               </Link>
@@ -26,23 +30,48 @@ export default function Home() {
               </Link>
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <i className="nes-icon trophy is-large" aria-hidden />
-            <i className="nes-icon heart is-large" aria-hidden />
-            <i className="nes-icon star is-large" aria-hidden />
+          <div className="flex flex-col items-center gap-4  ">
+            <div className="flex items-center gap-4 text-4xl" aria-hidden>
+              <i className="nes-icon trophy is-large" />
+              <i className="nes-icon heart is-large" />
+              <i className="nes-icon star is-large" />
+            </div>
+            <div className="nes-balloon from-left text-center text-xs opacity-80">
+              选择一种模式开始创建你的榜单
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="nes-container with-title pixel-shadow">
-        <p className="title">特性</p>
-        <ul className="nes-list is-disc">
-          <li>从游戏库搜索、筛选</li>
-          <li>拖拽排序与移动（支持跨列表）</li>
-          <li>导出排名结果为图片</li>
-          <li>复古像素风</li>
-        </ul>
+      {/* HOW IT WORKS */}
+      <section className="nes-container with-title pixel-shadow mt-8">
+        <p className="title">如何使用</p>
+        <div className="grid md:grid-cols-3 gap-6">
+          <div>
+            <div className="mb-2 nes-badge">
+              <span className="is-dark">步骤 1</span>
+            </div>
+            <p className="text-sm opacity-80">
+              在“添加游戏”里搜索想要的游戏，点击或从搜索结果直接拖拽到目标列表/梯队。
+            </p>
+          </div>
+          <div>
+            <div className="mb-2 nes-badge">
+              <span className="is-dark">步骤 2</span>
+            </div>
+            <p className="text-sm opacity-80">
+              在列表或梯队中拖动卡片进行排序，支持跨区域拖拽和任意位置插入。
+            </p>
+          </div>
+          <div>
+            <div className="mb-2 nes-badge">
+              <span className="is-dark">步骤 3</span>
+            </div>
+            <p className="text-sm opacity-80">
+              设置导出标题，点击“导出为图片”，分享你的最终作品。
+            </p>
+          </div>
+        </div>
       </section>
     </div>
   );
