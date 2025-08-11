@@ -8,7 +8,7 @@ import { ExportImageButton } from "@/components/ExportImageButton";
 
 export default function TopPage() {
   const { topMax, setTopMax, addToTop, topGames, clearTop } = useRankingStore();
-  const containerRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [exportTitle, setExportTitle] = useState(
     `我心目中的 Top${topMax} 游戏`
   );
@@ -82,10 +82,7 @@ export default function TopPage() {
             placeholder={`我心目中的 Top${topMax} 游戏`}
           />
         </div>
-        <div
-          ref={containerRef as React.RefObject<HTMLElement>}
-          className="space-y-3"
-        >
+        <div ref={containerRef} className="space-y-3">
           <h3 className="text-center text-base font-bold retro-title">
             {exportTitle}
           </h3>
