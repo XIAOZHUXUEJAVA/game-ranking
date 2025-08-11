@@ -1,22 +1,24 @@
 "use client";
 import { toPng } from "html-to-image";
-import { RefObject, useState } from "react";
+import { useState } from "react";
 
-type Props<T extends HTMLElement = HTMLElement> = {
-  targetRef: RefObject<T>;
+type ElementLikeRef = { current: HTMLElement | null };
+
+type Props = {
+  targetRef: ElementLikeRef;
   filename?: string;
 };
 
-export function ExportImageButton<T extends HTMLElement = HTMLElement>({
+export function ExportImageButton({
   targetRef,
   filename = "ranking.png",
-}: Props<T>) {
+}: Props) {
   const [loading, setLoading] = useState(false);
   const handleExport = async () => {
     if (!targetRef.current) return;
     setLoading(true);
     try {
-      const dataUrl = await toPng(targetRef.current as unknown as HTMLElement, {
+      const dataUrl = await toPng(targetRef.current, {
         cacheBust: true,
         pixelRatio: 2,
         backgroundColor:
