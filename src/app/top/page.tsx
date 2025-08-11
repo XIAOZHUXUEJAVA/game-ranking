@@ -17,7 +17,7 @@ export default function TopPage() {
     if (/^我心目中的 Top\d+ 游戏$/.test(exportTitle)) {
       setExportTitle(`我心目中的 Top${topMax} 游戏`);
     }
-  }, [topMax]);
+  }, [topMax, exportTitle]);
 
   return (
     <div className="container mx-auto p-4 space-y-4">
