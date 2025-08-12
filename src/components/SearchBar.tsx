@@ -30,7 +30,7 @@ export function SearchBar({ excludeIds = [], onAdd }: Props) {
   }, [excludeIds, fuse, query]);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-3">
       <div className="nes-field">
         <input
           className="nes-input"
@@ -39,20 +39,34 @@ export function SearchBar({ excludeIds = [], onAdd }: Props) {
           onChange={(e) => setQuery(e.target.value)}
         />
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {results.map((game) => (
-          <button
-            key={game.id}
-            className="nes-btn"
-            draggable
-            onDragStart={(e) => {
-              e.dataTransfer.setData("application/x-game-id", game.id);
-              e.dataTransfer.effectAllowed = "copy";
-            }}
-            onClick={() => onAdd(game)}
-          >
-            {game.title} {game.platform ? `(${game.platform})` : ""}
-          </button>
+          <div key={game.id} className="justify-self-center">
+            <div
+              className="cursor-pointer"
+              draggable
+              onDragStart={(e) => {
+                e.dataTransfer.setData("application/x-game-id", game.id);
+                e.dataTransfer.effectAllowed = "copy";
+              }}
+              onClick={() => onAdd(game)}
+            >
+              <div
+                className="text-center text-xs mb-1 truncate"
+                title={game.title}
+              >
+                {game.title}
+              </div>
+              <img
+                src="/default-game.svg"
+                alt={game.title}
+                width={174}
+                height={228}
+                className="w-[174px] h-[228px] object-cover image-render-pixel nes-container is-rounded p-0"
+                style={{ imageRendering: "pixelated" }}
+              />
+            </div>
+          </div>
         ))}
       </div>
     </div>

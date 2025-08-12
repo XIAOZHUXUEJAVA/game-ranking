@@ -61,7 +61,7 @@ export default function TopPage() {
         </div>
       </div>
 
-      <div className="nes-container with-title pixel-shadow">
+      <div className="nes-container with-title pixel-shadow mt-4">
         <p className="title">添加游戏</p>
         <SearchBar
           excludeIds={getAllUsedGameIds(useRankingStore.getState())}

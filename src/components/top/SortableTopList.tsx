@@ -16,7 +16,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { useRankingStore } from "@/store/useRankingStore";
 import { Game } from "@/lib/types";
-import { GameCard } from "@/components/GameCard";
+import { ThumbnailCard } from "@/components/ThumbnailCard";
 import { GAME_LIBRARY } from "@/lib/games";
 import { useCallback } from "react";
 
@@ -38,12 +38,14 @@ function SortableItem({
       style={style}
       {...attributes}
       {...listeners}
-      className="flex items-center gap-3"
+      className="inline-block"
     >
-      <span className="nes-badge">
-        <span className="is-dark">#{index + 1}</span>
-      </span>
-      <GameCard game={game} onRemove={onRemove} className="flex-1" />
+      <div className="flex items-center gap-2 mb-1">
+        <span className="nes-badge">
+          <span className="is-dark">#{index + 1}</span>
+        </span>
+      </div>
+      <ThumbnailCard game={game} onRemove={() => onRemove(game.id)} />
     </div>
   );
 }
@@ -95,7 +97,7 @@ export function SortableTopList() {
         strategy={verticalListSortingStrategy}
       >
         <div
-          className="flex flex-col gap-3"
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
           onDragOver={allowDrop}
           onDrop={handleDropOnIndex(null)}
         >
@@ -104,6 +106,7 @@ export function SortableTopList() {
               key={g.id}
               onDragOver={allowDrop}
               onDrop={handleDropOnIndex(idx)}
+              className="justify-self-center"
             >
               <SortableItem game={g} index={idx} onRemove={removeFromTop} />
             </div>

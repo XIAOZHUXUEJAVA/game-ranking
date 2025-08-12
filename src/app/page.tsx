@@ -5,7 +5,6 @@ export default function Home() {
     <div className="container mx-auto p-6 space-y-10">
       {/* HERO */}
       <section className="relative overflow-hidden nes-container is-dark with-title pixel-shadow">
-        <p className="title">欢迎</p>
         <div
           className="absolute -top-10 -right-10 opacity-10 text-[160px] select-none"
           aria-hidden

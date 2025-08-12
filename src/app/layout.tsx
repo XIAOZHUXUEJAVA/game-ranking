@@ -33,11 +33,14 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body
-        className={`crt-overlay font-retro ${geistSans.variable} ${geistMono.variable} ${pressStart.variable} antialiased`}
+        className={`crt-overlay ${geistSans.variable} ${geistMono.variable} ${pressStart.variable} antialiased`}
       >
-        <header className="border-b bg-[#1a1d22]">
+        <header className="border-b bg-[#161a20]">
           <nav className="container mx-auto flex items-center justify-between p-4">
-            <Link className="retro-title text-lg font-bold" href="/">
+            <Link
+              className="retro-title heading-8bit text-lg font-bold"
+              href="/"
+            >
               RANK GAME
             </Link>
             <div className="flex items-center gap-2">
@@ -51,7 +54,7 @@ export default function RootLayout({
           </nav>
         </header>
         <main className="min-h-[calc(100vh-64px)]">{children}</main>
-        <footer className="border-t mt-8 bg-[#1a1d22]">
+        <footer className="border-t mt-8 bg-[#161a20]">
           <div className="container mx-auto p-4 text-xs opacity-70">
             © 2025 Rank Game
           </div>
