@@ -1,6 +1,7 @@
 "use client";
 import { Game } from "@/lib/types";
 import clsx from "clsx";
+import { GameImage } from "@/components/GameImage";
 
 type Props = {
   game: Game;
@@ -16,37 +17,43 @@ export function ThumbnailCard({ game, onClick, onRemove, className }: Props) {
       className={clsx(
         "relative select-none",
         "w-[174px] h-[228px]",
-        "nes-container is-rounded p-0 flex items-end overflow-hidden",
+        "nes-container is-rounded p-2 flex items-end overflow-hidden",
         className
       )}
       onClick={onClick}
       role={onClick ? "button" : undefined}
     >
-      <img
-        src="/default-game.svg"
-        alt={game.title}
-        width={174}
-        height={228}
-        className="absolute inset-0 w-full h-full object-cover image-render-pixel"
-        style={{ imageRendering: "pixelated" }}
-      />
+      <div className="absolute inset-1">
+        <GameImage
+          game={game}
+          width={174}
+          height={228}
+          className="w-full h-full object-cover image-render-pixel block"
+          style={{ imageRendering: "pixelated" }}
+        />
+      </div>
       {/* gradient bottom caption */}
       <div className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-black/70 to-transparent" />
       <div className="relative w-full px-2 pb-2">
-        <div className="text-[12px] font-bold truncate" title={game.title}>
+        {/* <div className="text-[12px] font-bold truncate" title={game.title}>
           {game.title}
-        </div>
+        </div> */}
         <div className="text-[10px] opacity-80 truncate">
           {game.platform} {game.year ? `· ${game.year}` : ""}
         </div>
       </div>
       {onRemove ? (
         <button
-          className="nes-btn is-error !m-0 !px-2 !py-0 absolute top-2 right-2"
+          type="button"
+          className="nes-btn is-error !m-0 !px-2 !py-0 absolute top-3 right-3"
+          onPointerDown={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
           onClick={(e) => {
             e.stopPropagation();
             onRemove();
           }}
+          aria-label="remove"
         >
           ×
         </button>

@@ -1,6 +1,7 @@
 "use client";
 import { Game } from "@/lib/types";
 import clsx from "clsx";
+import { GameImage } from "@/components/GameImage";
 
 type Props = {
   game: Game;
@@ -21,14 +22,13 @@ export function GameCard({ game, onRemove, className, size = "lg" }: Props) {
       )}
     >
       <div className="flex items-center gap-4 flex-1 min-w-0">
-        <img
-          src="/default-game.svg"
-          alt="game"
+        <GameImage
+          game={game}
           width={imgPx}
           height={imgPx}
           className={clsx(
             imgClass,
-            "rounded-sm object-cover image-render-pixel border border-black/40 shrink-0"
+            "block rounded-sm object-cover image-render-pixel border border-black/40 shrink-0"
           )}
           style={{ imageRendering: "pixelated" }}
         />

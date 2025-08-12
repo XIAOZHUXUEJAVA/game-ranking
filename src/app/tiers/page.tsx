@@ -1,7 +1,7 @@
 "use client";
 import { useRef } from "react";
 import Link from "next/link";
-import { useRankingStore, getAllUsedGameIds } from "@/store/useRankingStore";
+import { useRankingStore, getTierGameIds } from "@/store/useRankingStore";
 import { SearchBar } from "@/components/SearchBar";
 import { TierBoard } from "@/components/tiers/TierBoard";
 import { ExportImageButton } from "@/components/ExportImageButton";
@@ -29,16 +29,14 @@ export default function TiersPage() {
         </div>
       </div>
 
-      <div className="nes-container with-title pixel-shadow">
+      <div className="nes-container with-title pixel-shadow mt-4">
         <p className="title">添加到某个梯队</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3">
           <SearchBar
-            excludeIds={getAllUsedGameIds(useRankingStore.getState())}
+            excludeIds={getTierGameIds(useRankingStore.getState())}
             onAdd={(g) => addToTier("T3", g)}
           />
-          <div className="text-xs opacity-70 flex items-center">
-            点击搜索结果添加，默认添加到 T3；或直接拖拽到目标梯队。
-          </div>
+          {/* 如需在右侧展示提示或统计信息，可在此处添加一个块。 */}
         </div>
       </div>
 

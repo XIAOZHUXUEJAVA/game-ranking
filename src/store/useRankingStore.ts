@@ -129,3 +129,14 @@ export const getAllUsedGameIds = (state: RankingState): string[] => {
   );
   return Array.from(ids);
 };
+
+export const getTierGameIds = (state: RankingState): string[] => {
+  const ids = new Set<string>();
+  (Object.keys(state.tiers) as TierId[]).forEach((t) =>
+    state.tiers[t].forEach((g) => ids.add(g.id))
+  );
+  return Array.from(ids);
+};
+
+export const getTopGameIds = (state: RankingState): string[] =>
+  state.topGames.map((g) => g.id);

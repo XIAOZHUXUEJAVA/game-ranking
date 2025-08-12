@@ -23,6 +23,12 @@ export function ExportImageButton({
         pixelRatio: 2,
         backgroundColor:
           getComputedStyle(document.body).backgroundColor || "#ffffff",
+        filter: (node) => {
+          if (node instanceof HTMLElement) {
+            if (node.getAttribute("aria-label") === "remove") return false;
+          }
+          return true;
+        },
       });
       const link = document.createElement("a");
       link.download = filename;

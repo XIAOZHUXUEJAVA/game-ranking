@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useRankingStore, getAllUsedGameIds } from "@/store/useRankingStore";
+import { useRankingStore, getTopGameIds } from "@/store/useRankingStore";
 import { SearchBar } from "@/components/SearchBar";
 import { SortableTopList } from "@/components/top/SortableTopList";
 import { ExportImageButton } from "@/components/ExportImageButton";
@@ -64,7 +64,7 @@ export default function TopPage() {
       <div className="nes-container with-title pixel-shadow mt-4">
         <p className="title">添加游戏</p>
         <SearchBar
-          excludeIds={getAllUsedGameIds(useRankingStore.getState())}
+          excludeIds={getTopGameIds(useRankingStore.getState())}
           onAdd={addToTop}
         />
       </div>

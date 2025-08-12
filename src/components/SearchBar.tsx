@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import Fuse from "fuse.js";
 import { GAME_LIBRARY } from "@/lib/games";
 import { Game } from "@/lib/types";
+import { GameImage } from "@/components/GameImage";
 
 type Props = {
   excludeIds?: string[];
@@ -57,12 +58,11 @@ export function SearchBar({ excludeIds = [], onAdd }: Props) {
               >
                 {game.title}
               </div>
-              <img
-                src="/default-game.svg"
-                alt={game.title}
+              <GameImage
+                game={game}
                 width={174}
                 height={228}
-                className="w-[174px] h-[228px] object-cover image-render-pixel nes-container is-rounded p-0"
+                className="w-[200px] h-[228px] object-cover image-render-pixel nes-container is-rounded p-0 block"
                 style={{ imageRendering: "pixelated" }}
               />
             </div>

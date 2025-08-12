@@ -24,7 +24,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { useRankingStore } from "@/store/useRankingStore";
 import { Game, TierId } from "@/lib/types";
 import { GAME_LIBRARY } from "@/lib/games";
-import { GameCard } from "@/components/GameCard";
+import { ThumbnailCard } from "@/components/ThumbnailCard";
 import clsx from "clsx";
 
 function SortableGame({
@@ -47,9 +47,9 @@ function SortableGame({
       style={style}
       {...attributes}
       {...listeners}
-      className="cursor-grab active:cursor-grabbing"
+      className="cursor-grab active:cursor-grabbing inline-block"
     >
-      <GameCard game={game} onRemove={onRemove} />
+      <ThumbnailCard game={game} onRemove={() => onRemove(game.id)} />
     </div>
   );
 }
@@ -194,7 +194,7 @@ export function TierBoard() {
                 strategy={verticalListSortingStrategy}
               >
                 <div
-                  className="flex flex-col gap-2 min-h-40 py-4 select-none"
+                  className="flex flex-col items-center gap-2 min-h-40 py-4 select-none"
                   id={tier}
                 >
                   {tiers[tier].length === 0 ? (
@@ -207,6 +207,7 @@ export function TierBoard() {
                   {tiers[tier].map((g, idx) => (
                     <div
                       key={g.id}
+                      className="shrink-0"
                       onDragOver={handleAllowDrop}
                       onDrop={handleDropOnTier(tier, idx)}
                     >
@@ -235,14 +236,7 @@ export function TierBoard() {
           ? (() => {
               const all = containers.flatMap((t) => tiers[t]);
               const g = all.find((x) => x.id === activeId);
-              return g ? (
-                <div
-                  className="nes-container is-rounded p-2 text-sm font-bold will-change-transform"
-                  style={{ transform: "translateZ(0)" }}
-                >
-                  {g.title}
-                </div>
-              ) : null;
+              return g ? <ThumbnailCard game={g} /> : null;
             })()
           : null}
       </DragOverlay>
