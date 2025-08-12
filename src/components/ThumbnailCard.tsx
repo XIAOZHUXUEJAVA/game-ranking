@@ -17,18 +17,18 @@ export function ThumbnailCard({ game, onClick, onRemove, className }: Props) {
       className={clsx(
         "relative select-none",
         "w-[174px] h-[228px]",
-        "nes-container is-rounded p-2 flex items-end overflow-hidden",
+        "nes-container is-rounded p-1 flex items-end overflow-hidden",
         className
       )}
       onClick={onClick}
       role={onClick ? "button" : undefined}
     >
-      <div className="absolute inset-1">
+      <div className="absolute inset-0">
         <GameImage
           game={game}
           width={174}
           height={228}
-          className="w-full h-full object-cover image-render-pixel block"
+          className="w-full h-full object-cover image-render-pixel block rounded-md"
           style={{ imageRendering: "pixelated" }}
         />
       </div>

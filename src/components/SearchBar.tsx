@@ -58,13 +58,15 @@ export function SearchBar({ excludeIds = [], onAdd }: Props) {
               >
                 {game.title}
               </div>
-              <GameImage
-                game={game}
-                width={174}
-                height={228}
-                className="w-[200px] h-[228px] object-cover image-render-pixel nes-container is-rounded p-0 block"
-                style={{ imageRendering: "pixelated" }}
-              />
+              <div className="w-[200px] h-[228px] nes-container is-rounded !p-0 overflow-hidden">
+                <GameImage
+                  game={game}
+                  width={200}
+                  height={228}
+                  className="w-full h-full object-cover image-render-pixel block rounded-md"
+                  style={{ imageRendering: "pixelated" }}
+                />
+              </div>
             </div>
           </div>
         ))}
