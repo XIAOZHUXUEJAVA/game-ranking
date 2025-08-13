@@ -35,20 +35,27 @@ export default function RootLayout({
       <body
         className={`crt-overlay ${geistSans.variable} ${geistMono.variable} ${pressStart.variable} antialiased`}
       >
-        <header className="border-b bg-[#161a20]">
-          <nav className="container mx-auto flex items-center justify-between p-4">
-            <Link
-              className="retro-title heading-8bit text-lg font-bold"
-              href="/"
-            >
-              RANK GAME
+        <header className="retro-header">
+          <nav className="container mx-auto flex items-center justify-between py-3">
+            <Link href="/" className="retro-brand">
+              <i className="nes-icon star is-small pixel-icons" aria-hidden />
+              <span className="brand-text">RANK GAME</span>
             </Link>
-            <div className="flex items-center gap-2">
-              <Link className="nes-btn" href="/top">
-                Top 排行
+            <div className="retro-nav">
+              <Link href="/top" className="nav-link nav-link--primary">
+                <i
+                  className="nes-icon heart is-small pixel-icons"
+                  aria-hidden
+                />
+                <span>Top 排行</span>
               </Link>
-              <Link className="nes-btn" href="/tiers">
-                梯队模式
+              <span className="nav-dot rounded-[2px] hidden sm:inline-block" />
+              <Link href="/tiers" className="nav-link">
+                <i
+                  className="nes-icon trophy is-small pixel-icons"
+                  aria-hidden
+                />
+                <span>梯队模式</span>
               </Link>
             </div>
           </nav>
