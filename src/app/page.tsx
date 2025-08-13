@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <div className="container mx-auto p-6 space-y-10">
       {/* HERO */}
-      <section className="relative overflow-hidden nes-container is-dark with-title pixel-shadow">
+      <section className="relative overflow-hidden nes-container is-dark with-title pixel-shadow pixel-rounded">
         <div
           className="absolute -top-10 -right-10 opacity-10 text-[160px] select-none"
           aria-hidden
@@ -21,10 +21,10 @@ export default function Home() {
               排行与梯队划分，拖拽即排，导出即分享。
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
-              <Link className="nes-btn is-primary" href="/top">
-                进入 Top 模式
+              <Link className="nes-btn is-primary pixel-rounded" href="/top">
+                进入排行模式
               </Link>
-              <Link className="nes-btn" href="/tiers">
+              <Link className="nes-btn pixel-rounded" href="/tiers">
                 进入梯队模式
               </Link>
             </div>
@@ -43,7 +43,7 @@ export default function Home() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="nes-container with-title pixel-shadow mt-8">
+      <section className="nes-container with-title pixel-shadow mt-8 pixel-rounded">
         <p className="title">如何使用</p>
         <div className="grid md:grid-cols-3 gap-6">
           <div>

@@ -38,19 +38,25 @@ export default function RootLayout({
         <header className="retro-header">
           <nav className="container mx-auto flex items-center justify-between py-3">
             <Link href="/" className="retro-brand">
-              <i className="nes-icon star is-small pixel-icons" aria-hidden />
+              <i className="nes-icon  is-small pixel-icons" aria-hidden />
               <span className="brand-text">RANK GAME</span>
             </Link>
             <div className="retro-nav">
-              <Link href="/top" className="nav-link nav-link--primary">
+              <Link href="/top" className="nav-link nes-btn pixel-rounded">
+                <i className="nes-icon star is-small pixel-icons" aria-hidden />
+                <span>首页</span>
+              </Link>
+
+              <span className="nav-dot rounded-[2px] hidden sm:inline-block" />
+              <Link href="/top" className="nav-link nes-btn pixel-rounded">
                 <i
                   className="nes-icon heart is-small pixel-icons"
                   aria-hidden
                 />
-                <span>Top 排行</span>
+                <span>排行模式</span>
               </Link>
               <span className="nav-dot rounded-[2px] hidden sm:inline-block" />
-              <Link href="/tiers" className="nav-link">
+              <Link href="/tiers" className="nav-link nes-btn pixel-rounded">
                 <i
                   className="nes-icon trophy is-small pixel-icons"
                   aria-hidden

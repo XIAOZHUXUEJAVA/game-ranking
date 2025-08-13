@@ -183,7 +183,7 @@ export function TierBoard() {
     >
       <div className="flex flex-col gap-6">
         {containers.map((tier) => (
-          <div key={tier} className="flex flex-col">
+          <div key={tier} className="flex flex-col pixel-rounded">
             <div
               className="nes-container with-title"
               onDragOver={handleAllowDrop}

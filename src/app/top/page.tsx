@@ -21,28 +21,35 @@ export default function TopPage() {
 
   return (
     <div className="container mx-auto p-4 space-y-4">
-      <div className="nes-container is-dark pixel-shadow">
+      <div className="nes-container is-dark pixel-shadow pixel-rounded">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link className="nes-btn" href="/">
+            <Link className="nes-btn pixel-rounded" href="/">
               返回首页
             </Link>
             <h2 className="text-xl font-bold">Top 排行</h2>
           </div>
           <div className="flex items-center gap-2">
             <button
-              className={`nes-btn ${topMax === 5 ? "is-primary" : ""}`}
+              className={`nes-btn pixel-rounded ${
+                topMax === 5 ? "is-primary" : ""
+              }`}
               onClick={() => setTopMax(5)}
             >
               Top 5
             </button>
             <button
-              className={`nes-btn ${topMax === 10 ? "is-primary" : ""}`}
+              className={`nes-btn pixel-rounded ${
+                topMax === 10 ? "is-primary" : ""
+              }`}
               onClick={() => setTopMax(10)}
             >
               Top 10
             </button>
-            <button className="nes-btn is-error" onClick={clearTop}>
+            <button
+              className="nes-btn is-error pixel-rounded"
+              onClick={clearTop}
+            >
               清空
             </button>
           </div>
@@ -54,14 +61,21 @@ export default function TopPage() {
             </span>
           </span>
           <progress
-            className="nes-progress is-primary flex-1"
+            className="nes-progress is-primary flex-1 pixel-rounded"
             value={topGames.length}
             max={topMax}
           />
         </div>
       </div>
 
-      <div className="nes-container with-title pixel-shadow mt-4">
+      {/* <div className="nes-container with-title pixel-shadow mt-4">
+        <p className="title">添加游戏</p>
+        <SearchBar
+          excludeIds={getTopGameIds(useRankingStore.getState())}
+          onAdd={addToTop}
+        />
+      </div> */}
+      <div className="nes-container with-title pixel-shadow mt-4 pixel-rounded">
         <p className="title">添加游戏</p>
         <SearchBar
           excludeIds={getTopGameIds(useRankingStore.getState())}
@@ -69,7 +83,7 @@ export default function TopPage() {
         />
       </div>
 
-      <div className="nes-container with-title">
+      <div className="nes-container with-title pixel-rounded">
         <p className="title">
           当前排名 ({topGames.length}/{topMax})
         </p>

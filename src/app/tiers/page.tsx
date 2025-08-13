@@ -12,15 +12,18 @@ export default function TiersPage() {
 
   return (
     <div className="container mx-auto p-4 space-y-4">
-      <div className="nes-container is-dark pixel-shadow">
+      <div className="nes-container is-dark pixel-shadow pixel-rounded">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link className="nes-btn" href="/">
+          <div className="flex items-center gap-3 p">
+            <Link className="nes-btn pixel-rounded" href="/">
               返回首页
             </Link>
             <h2 className="text-xl font-bold">梯队划分</h2>
           </div>
-          <button className="nes-btn is-error" onClick={clearTiers}>
+          <button
+            className="nes-btn is-error pixel-rounded"
+            onClick={clearTiers}
+          >
             清空
           </button>
         </div>
@@ -42,7 +45,7 @@ export default function TiersPage() {
           </div>
         </div>
         <aside className="lg:col-span-4">
-          <div className="nes-container with-title pixel-shadow">
+          <div className="nes-container with-title pixel-shadow pixel-rounded">
             <p className="title">添加到某个梯队</p>
             <SearchBar
               gridColumns="two"
