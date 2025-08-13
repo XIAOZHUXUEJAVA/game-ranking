@@ -11,6 +11,7 @@ import {
   useDroppable,
   DragOverlay,
   closestCorners,
+  closestCenter,
   pointerWithin,
   type CollisionDetection,
 } from "@dnd-kit/core";
@@ -19,6 +20,7 @@ import {
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
+  rectSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useRankingStore } from "@/store/useRankingStore";
@@ -69,24 +71,24 @@ export function TierBoard() {
     []
   );
 
-  // Prefer item collisions over container collisions for smoother targeting
+  // Prefer item collisions first, fall back to container when no items (empty tier)
   const collisionStrategy: CollisionDetection = useMemo(() => {
     return (args) => {
-      // 1) If pointer is inside any tier container, prefer that container (handles empty tiers)
+      const itemCollisions = closestCenter(args);
+      const allItems = new Set(
+        containers.flatMap((t) => tiers[t].map((g) => g.id))
+      );
+      const itemHits = itemCollisions.filter((c) => allItems.has(String(c.id)));
+      if (itemHits.length) return itemHits;
+
       const containerIds = new Set<string>(containers);
       const pointerHits = pointerWithin(args).filter((c) =>
         containerIds.has(String(c.id))
       );
       if (pointerHits.length) return pointerHits;
 
-      // 2) Otherwise prefer closest item corners for precise between-item insertion
-      const collisions = closestCorners(args);
-      if (!collisions.length) return collisions;
-      const allItems = new Set(
-        containers.flatMap((t) => tiers[t].map((g) => g.id))
-      );
-      const itemHits = collisions.filter((c) => allItems.has(String(c.id)));
-      return itemHits.length ? itemHits : collisions;
+      // Fallback to corners if needed
+      return closestCorners(args);
     };
   }, [containers, tiers]);
 
@@ -138,10 +140,10 @@ export function TierBoard() {
 
     if (sourceTier === destTier && sourceIndex === destIndex) return;
 
-    // Adjust index when moving within same list and past original position
-    if (sourceTier === destTier && destIndex > sourceIndex) {
-      destIndex = destIndex - 1;
-    }
+    // Adjust index semantics to support 'drop after' when moving upwards
+    // same-tier reordering: always insert before hovered index
+    // adjust when moving down since removal shifts indices
+    if (sourceTier === destTier && destIndex > sourceIndex) destIndex -= 1;
     moveBetweenTiers(sourceTier, destTier, sourceIndex, Math.max(0, destIndex));
   };
 
@@ -179,53 +181,54 @@ export function TierBoard() {
       onDragEnd={onDragEnd}
       collisionDetection={collisionStrategy}
     >
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+      <div className="flex flex-col gap-6">
         {containers.map((tier) => (
-          <div
-            key={tier}
-            className="nes-container with-title"
-            onDragOver={handleAllowDrop}
-            onDrop={handleDropOnTier(tier, null)}
-          >
-            <p className="title">{tier}</p>
-            <DroppableTier id={tier}>
-              <SortableContext
-                items={tiers[tier].map((g) => g.id)}
-                strategy={verticalListSortingStrategy}
-              >
-                <div
-                  className="flex flex-col items-center gap-2 min-h-40 py-4 select-none"
-                  id={tier}
+          <div key={tier} className="flex flex-col">
+            <div
+              className="nes-container with-title"
+              onDragOver={handleAllowDrop}
+              onDrop={handleDropOnTier(tier, null)}
+            >
+              <p className="title">{tier}</p>
+              <DroppableTier id={tier}>
+                <SortableContext
+                  items={tiers[tier].map((g) => g.id)}
+                  strategy={rectSortingStrategy}
                 >
-                  {tiers[tier].length === 0 ? (
-                    <div className="flex items-center justify-center">
-                      <div className="nes-balloon from-left is-dark text-center text-xs opacity-70">
-                        拖拽到此处
-                      </div>
-                    </div>
-                  ) : null}
-                  {tiers[tier].map((g, idx) => (
-                    <div
-                      key={g.id}
-                      className="shrink-0"
-                      onDragOver={handleAllowDrop}
-                      onDrop={handleDropOnTier(tier, idx)}
-                    >
-                      <SortableGame
-                        game={g}
-                        onRemove={(id) => removeFromTier(tier, id)}
-                      />
-                    </div>
-                  ))}
-                  {/* container tail drop */}
                   <div
-                    className="h-2"
-                    onDragOver={handleAllowDrop}
-                    onDrop={handleDropOnTier(tier, tiers[tier].length)}
-                  />
-                </div>
-              </SortableContext>
-            </DroppableTier>
+                    className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center min-h-40 py-4 select-none"
+                    id={tier}
+                  >
+                    {tiers[tier].length === 0 ? (
+                      <div className="flex items-center justify-center">
+                        <div className="nes-balloon from-left is-dark text-center text-xs opacity-70">
+                          拖拽到此处
+                        </div>
+                      </div>
+                    ) : null}
+                    {tiers[tier].map((g, idx) => (
+                      <div
+                        key={g.id}
+                        className="shrink-0"
+                        onDragOver={handleAllowDrop}
+                        onDrop={handleDropOnTier(tier, idx)}
+                      >
+                        <SortableGame
+                          game={g}
+                          onRemove={(id) => removeFromTier(tier, id)}
+                        />
+                      </div>
+                    ))}
+                    {/* container tail drop */}
+                    <div
+                      className="h-2 col-span-full"
+                      onDragOver={handleAllowDrop}
+                      onDrop={handleDropOnTier(tier, tiers[tier].length)}
+                    />
+                  </div>
+                </SortableContext>
+              </DroppableTier>
+            </div>
           </div>
         ))}
       </div>
