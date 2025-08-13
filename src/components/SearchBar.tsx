@@ -8,9 +8,14 @@ import { GameImage } from "@/components/GameImage";
 type Props = {
   excludeIds?: string[];
   onAdd: (game: Game) => void;
+  gridColumns?: "two" | "auto";
 };
 
-export function SearchBar({ excludeIds = [], onAdd }: Props) {
+export function SearchBar({
+  excludeIds = [],
+  onAdd,
+  gridColumns = "auto",
+}: Props) {
   const [query, setQuery] = useState("");
 
   const fuse = useMemo(() => {
@@ -40,7 +45,13 @@ export function SearchBar({ excludeIds = [], onAdd }: Props) {
           onChange={(e) => setQuery(e.target.value)}
         />
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <div
+        className={
+          gridColumns === "two"
+            ? "grid grid-cols-2 gap-4"
+            : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+        }
+      >
         {results.map((game) => (
           <div key={game.id} className="justify-self-center">
             <div
@@ -58,10 +69,16 @@ export function SearchBar({ excludeIds = [], onAdd }: Props) {
               >
                 {game.title}
               </div>
-              <div className="w-[174px] h-[228px] nes-container is-rounded !p-0 overflow-hidden">
+              <div
+                className="nes-container is-rounded !p-0 overflow-hidden"
+                style={{
+                  width: gridColumns === "two" ? "164px" : "174px",
+                  height: "228px",
+                }}
+              >
                 <GameImage
                   game={game}
-                  width={174}
+                  width={gridColumns === "two" ? 164 : 174}
                   height={228}
                   className="w-full h-full object-cover image-render-pixel block rounded-md"
                   style={{ imageRendering: "pixelated" }}

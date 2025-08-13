@@ -25,30 +25,32 @@ export default function TiersPage() {
           </button>
         </div>
         <div className="mt-3 text-xs opacity-80">
-          提示：可在梯队间任意拖拽移动，也可从左侧搜索结果直接拖入某个梯队或其卡片之间。
+          提示：左右分栏展示；右侧搜索结果可拖入左侧任意梯队或其卡片之间。
         </div>
       </div>
 
-      <div className="nes-container with-title pixel-shadow mt-4">
-        <p className="title">添加到某个梯队</p>
-        <div className="grid grid-cols-1 gap-3">
-          <SearchBar
-            excludeIds={getTierGameIds(useRankingStore.getState())}
-            onAdd={(g) => addToTier("T3", g)}
-          />
-          {/* 如需在右侧展示提示或统计信息，可在此处添加一个块。 */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mt-4">
+        <div className="lg:col-span-8 space-y-4">
+          <div
+            ref={boardRef as React.RefObject<HTMLDivElement>}
+            className="space-y-4"
+          >
+            <TierBoard />
+          </div>
+          <div className="print:hidden">
+            <ExportImageButton targetRef={boardRef} filename="tiers.png" />
+          </div>
         </div>
-      </div>
-
-      <div
-        ref={boardRef as React.RefObject<HTMLDivElement>}
-        className="space-y-4"
-      >
-        <TierBoard />
-      </div>
-
-      <div className="nes-container is-dark pixel-shadow">
-        <ExportImageButton targetRef={boardRef} filename="tiers.png" />
+        <aside className="lg:col-span-4">
+          <div className="nes-container with-title pixel-shadow">
+            <p className="title">添加到某个梯队</p>
+            <SearchBar
+              gridColumns="two"
+              excludeIds={getTierGameIds(useRankingStore.getState())}
+              onAdd={(g) => addToTier("T3", g)}
+            />
+          </div>
+        </aside>
       </div>
     </div>
   );

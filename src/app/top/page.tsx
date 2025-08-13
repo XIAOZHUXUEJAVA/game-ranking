@@ -69,7 +69,7 @@ export default function TopPage() {
         />
       </div>
 
-      <div className="nes-container with-title pixel-shadow">
+      <div className="nes-container with-title">
         <p className="title">
           当前排名 ({topGames.length}/{topMax})
         </p>
@@ -88,7 +88,7 @@ export default function TopPage() {
           </h3>
           <SortableTopList />
         </div>
-        <div className="mt-4">
+        <div className="mt-4 print:hidden">
           <ExportImageButton
             targetRef={containerRef}
             filename={`top-${topMax}.png`}
