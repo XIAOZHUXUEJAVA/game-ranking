@@ -42,7 +42,7 @@ export default function RootLayout({
               <span className="brand-text">RANK GAME</span>
             </Link>
             <div className="retro-nav">
-              <Link href="/top" className="nav-link nes-btn pixel-rounded">
+              <Link href="/" className="nav-link nes-btn pixel-rounded">
                 <i className="nes-icon star is-small pixel-icons" aria-hidden />
                 <span>首页</span>
               </Link>
