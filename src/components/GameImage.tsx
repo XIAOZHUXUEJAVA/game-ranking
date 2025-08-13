@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useMemo, useState, ImgHTMLAttributes } from "react";
 import { Game } from "@/lib/types";
 
@@ -32,15 +33,16 @@ export function GameImage({
     srcIndex < candidates.length ? candidates[srcIndex] : "/default-game.svg";
 
   return (
-    <img
+    <Image
       src={src}
       alt={alt ?? game.title}
-      width={width}
-      height={height}
+      width={Number(width)}
+      height={Number(height)}
       className={className}
       style={style}
       loading={loading}
       onError={() => setSrcIndex((i) => i + 1)}
+      priority={false}
     />
   );
 }
