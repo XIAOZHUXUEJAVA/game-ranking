@@ -10,16 +10,14 @@ import {
   useSensors,
   useDroppable,
   DragOverlay,
-  closestCorners,
-  closestCenter,
   pointerWithin,
+  closestCenter,
   type CollisionDetection,
 } from "@dnd-kit/core";
 import {
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
-  verticalListSortingStrategy,
   rectSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -71,26 +69,16 @@ export function TierBoard() {
     []
   );
 
-  // Prefer item collisions first, fall back to container when no items (empty tier)
+  // 修复空容器拖入检测
   const collisionStrategy: CollisionDetection = useMemo(() => {
     return (args) => {
-      const itemCollisions = closestCenter(args);
-      const allItems = new Set(
-        containers.flatMap((t) => tiers[t].map((g) => g.id))
-      );
-      const itemHits = itemCollisions.filter((c) => allItems.has(String(c.id)));
-      if (itemHits.length) return itemHits;
-
-      const containerIds = new Set<string>(containers);
-      const pointerHits = pointerWithin(args).filter((c) =>
-        containerIds.has(String(c.id))
-      );
-      if (pointerHits.length) return pointerHits;
-
-      // Fallback to corners if needed
-      return closestCorners(args);
+      const pointerHits = pointerWithin(args);
+      if (pointerHits.length > 0) {
+        return pointerHits;
+      }
+      return closestCenter(args);
     };
-  }, [containers, tiers]);
+  }, []);
 
   const onDragStart = (event: DragStartEvent) => {
     setActiveId(String(event.active.id));
@@ -104,7 +92,6 @@ export function TierBoard() {
     const activeId = String(active.id);
     const overId = String(over.id);
 
-    // Find source tier and index
     let sourceTier: TierId | null = null;
     let sourceIndex = -1;
     for (const t of containers) {
@@ -117,7 +104,6 @@ export function TierBoard() {
     }
     if (!sourceTier) return;
 
-    // If dropped over a game card, insert at that index; if over a container, append
     let destTier: TierId | null = null;
     let destIndex = -1;
     for (const t of containers) {
@@ -129,7 +115,6 @@ export function TierBoard() {
       }
     }
     if (!destTier) {
-      // check if over container itself
       const maybeTier = containers.find((t) => t === overId);
       if (maybeTier) {
         destTier = maybeTier;
@@ -140,20 +125,17 @@ export function TierBoard() {
 
     if (sourceTier === destTier && sourceIndex === destIndex) return;
 
-    // Adjust index semantics to support 'drop after' when moving upwards
-    // same-tier reordering: always insert before hovered index
-    // adjust when moving down since removal shifts indices
     if (sourceTier === destTier && destIndex > sourceIndex) destIndex -= 1;
     moveBetweenTiers(sourceTier, destTier, sourceIndex, Math.max(0, destIndex));
   };
 
-  // Native HTML5 drag from search: allow drop
+  // HTML5 原生拖放
+  const GAME_POOL = GAME_LIBRARY as Game[];
   const handleDropOnTier =
     (tier: TierId, index: number | null) =>
     (e: React.DragEvent<HTMLDivElement>) => {
       const id = e.dataTransfer.getData("application/x-game-id");
       if (!id) return;
-      // Avoid default in onDragOver to allow drop; here we just insert
       e.preventDefault();
       const game = GAME_POOL.find((g) => g.id === id);
       if (!game) return;
@@ -170,9 +152,6 @@ export function TierBoard() {
       e.dataTransfer.dropEffect = "copy";
     }
   };
-
-  // Access to library for drop lookup
-  const GAME_POOL = GAME_LIBRARY as Game[];
 
   return (
     <DndContext
@@ -191,42 +170,43 @@ export function TierBoard() {
             >
               <p className="title">{tier}</p>
               <DroppableTier id={tier}>
-                <SortableContext
-                  items={tiers[tier].map((g) => g.id)}
-                  strategy={rectSortingStrategy}
-                >
-                  <div
-                    className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center min-h-40 py-4 select-none"
-                    id={tier}
+                <div className="min-h-40">
+                  <SortableContext
+                    items={tiers[tier].map((g) => g.id)}
+                    strategy={rectSortingStrategy}
                   >
-                    {tiers[tier].length === 0 ? (
-                      <div className="flex items-center justify-center">
-                        <div className="nes-balloon from-left is-dark text-center text-xs opacity-70">
-                          拖拽到此处
-                        </div>
-                      </div>
-                    ) : null}
-                    {tiers[tier].map((g, idx) => (
-                      <div
-                        key={g.id}
-                        className="shrink-0"
-                        onDragOver={handleAllowDrop}
-                        onDrop={handleDropOnTier(tier, idx)}
-                      >
-                        <SortableGame
-                          game={g}
-                          onRemove={(id) => removeFromTier(tier, id)}
-                        />
-                      </div>
-                    ))}
-                    {/* container tail drop */}
                     <div
-                      className="h-2 col-span-full"
-                      onDragOver={handleAllowDrop}
-                      onDrop={handleDropOnTier(tier, tiers[tier].length)}
-                    />
-                  </div>
-                </SortableContext>
+                      className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center py-4 select-none"
+                      id={tier}
+                    >
+                      {tiers[tier].length === 0 ? (
+                        <div className="flex items-center justify-center col-span-full">
+                          <div className="nes-balloon from-left is-dark text-center text-xs opacity-70">
+                            拖拽到此处
+                          </div>
+                        </div>
+                      ) : null}
+                      {tiers[tier].map((g, idx) => (
+                        <div
+                          key={g.id}
+                          className="shrink-0"
+                          onDragOver={handleAllowDrop}
+                          onDrop={handleDropOnTier(tier, idx)}
+                        >
+                          <SortableGame
+                            game={g}
+                            onRemove={(id) => removeFromTier(tier, id)}
+                          />
+                        </div>
+                      ))}
+                      <div
+                        className="h-2 col-span-full"
+                        onDragOver={handleAllowDrop}
+                        onDrop={handleDropOnTier(tier, tiers[tier].length)}
+                      />
+                    </div>
+                  </SortableContext>
+                </div>
               </DroppableTier>
             </div>
           </div>
