@@ -27,7 +27,7 @@ export default function TopPage() {
             <Link className="nes-btn pixel-rounded" href="/">
               返回首页
             </Link>
-            <h2 className="text-xl font-bold">Top 排行</h2>
+            <h2 className="text-xl font-bold">游戏排行</h2>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -54,17 +54,38 @@ export default function TopPage() {
             </button>
           </div>
         </div>
-        <div className="mt-3 flex items-center gap-3">
+        {/* <div className="mt-3 flex items-center gap-3">
           <span className="nes-badge">
             <span className="is-dark">
               {topGames.length}/{topMax}
             </span>
           </span>
           <progress
-            className="nes-progress is-primary flex-1 pixel-rounded"
+            className="nes-progress is-pattern flex-1 pixel-rounded"
             value={topGames.length}
             max={topMax}
           />
+        </div> */}
+        <div className="mt-3 relative">
+          <span className="nes-badge absolute -top-1 left-0">
+            <span className="is-dark">
+              {topGames.length}/{topMax}
+            </span>
+          </span>
+          <progress
+            className="nes-progress is-pattern flex-1 pixel-rounded"
+            value={topGames.length}
+            max={topMax}
+          />
+          {/* 马里奥图标 */}
+          <i
+            className="nes-mario nes-icon is-small absolute top-1/2 -translate-y-1/2"
+            style={{
+              left: `${(topGames.length / topMax) * 100}%`,
+              transform: "translateX(-50%) translateY(-50%)",
+              transition: "left 0.3s ease",
+            }}
+          ></i>
         </div>
       </div>
 

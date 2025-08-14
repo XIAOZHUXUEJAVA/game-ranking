@@ -28,7 +28,8 @@ export default function TiersPage() {
           </button>
         </div>
         <div className="mt-3 text-xs opacity-80">
-          提示：左右分栏展示；右侧搜索结果可拖入左侧任意梯队或其卡片之间。
+          提示：右侧搜索结果可拖入左侧任意梯队或其卡片之间,
+          不同梯队之间的游戏也可以任意拖拽.
         </div>
       </div>
 

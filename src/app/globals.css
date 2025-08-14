@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* ===================== */
+/* 🎨 主题变量 */
+/* ===================== */
 :root {
   --background: #111418;
   --foreground: #e8e8e8;
@@ -12,25 +15,37 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* Pixel CJK font (Zpix) for Chinese glyph coverage */
+/* ===================== */
+/* 🔤 字体加载 */
+/* ===================== */
+/* 英文字母像素字体（Press Start 2P） */
 @font-face {
-  font-family: "Zpix";
-  src: url("https://cdn.jsdelivr.net/gh/SolidZORO/zpix-pixel-font@1.2.1/dist/zpix.woff2")
-      format("woff2"),
-    url("https://cdn.jsdelivr.net/gh/SolidZORO/zpix-pixel-font@1.2.1/dist/zpix.woff")
-      format("woff");
+  font-family: "PressStart2P";
+  src: url("/fonts/PressStart2P-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
+  unicode-range: U+0000-007F;
+  font-display: swap;
+}
+
+/* 中文像素字体（Zpix） */
+@font-face {
+  font-family: "Zpix";
+  src: url("/fonts/zpix.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  unicode-range: U+4E00-9FFF;
   font-display: swap;
 }
 
 /* Retro font stack: Latin uses Press Start 2P; CJK falls back to Zpix */
 .font-retro {
-  font-family: var(--font-press-start), "Zpix", var(--font-geist-sans), Arial,
-    sans-serif;
+  font-family: "PressStart2P", "Zpix", var(--font-geist-sans), Arial, sans-serif;
 }
 
-/* Lock to darkish retro theme by default; users can still override if needed */
+/* ===================== */
+/* 🌙 暗色模式默认 */
+/* ===================== */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0e1116;
@@ -38,6 +53,9 @@
   }
 }
 
+/* ===================== */
+/* 📺 背景与 CRT 扫描线 */
+/* ===================== */
 body {
   background: radial-gradient(
       1200px 600px at 50% -10%,
@@ -68,23 +86,26 @@ body {
   opacity: 0.08;
 }
 
-/* Pixel-like shadows for containers (subtle) */
+/* ===================== */
+/* 🖼️ 复古阴影 */
+/* ===================== */
 .pixel-shadow {
   box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
 }
 
-/* Accent headers in retro tone */
 .retro-title {
   letter-spacing: 1px;
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
 }
 
-/* Buttons subtle press effect */
+/* ===================== */
+/* 🎮 NES.css 按钮优化 */
+/* ===================== */
 .nes-btn:active {
   transform: translateY(1px);
 }
 
-/* Ensure NES components also use our retro+CJK stack */
+/* 确保 NES 组件也用复古字体 */
 .nes-container,
 .nes-btn,
 .nes-badge,
@@ -93,11 +114,12 @@ body {
 .nes-text,
 .nes-field,
 .nes-input {
-  font-family: var(--font-press-start), "Zpix", var(--font-geist-sans), Arial,
-    sans-serif !important;
+  font-family: "PressStart2P", "Zpix", var(--font-geist-sans), Arial, sans-serif !important;
 }
 
-/* Retro header + nav (8-bit style) */
+/* ===================== */
+/* 🕹️ 复古 Header */
+/* ===================== */
 .retro-header {
   position: sticky;
   top: 0;
@@ -121,7 +143,7 @@ body {
 }
 
 .retro-brand .brand-text {
-  font-family: var(--font-press-start), "Zpix", monospace;
+  font-family: "PressStart2P", "Zpix", monospace;
   letter-spacing: 1px;
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.5);
 }
@@ -175,6 +197,7 @@ body {
 .pixel-icons i {
   image-rendering: pixelated;
 }
+
 .pixel-rounded {
   clip-path: polygon(
     0 6px,

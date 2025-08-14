@@ -64,7 +64,7 @@ export function SearchBar({
               onClick={() => onAdd(game)}
             >
               <div
-                className="text-center text-xs mb-1 truncate"
+                className="text-center text-xs mb-2 truncate"
                 title={game.title}
               >
                 {game.title}
