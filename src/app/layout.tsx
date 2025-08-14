@@ -38,8 +38,7 @@ export default function RootLayout({
         <header className="retro-header">
           <nav className="container mx-auto flex items-center justify-between py-3">
             <Link href="/" className="retro-brand">
-              <i className="nes-icon  is-small pixel-icons" aria-hidden />
-              <span className="brand-text">RANK GAME</span>
+              <div className="brand-text">RANK GAME</div>
             </Link>
             <div className="retro-nav">
               <Link href="/" className="nav-link nes-btn pixel-rounded">
@@ -62,6 +61,28 @@ export default function RootLayout({
                   aria-hidden
                 />
                 <span>梯队模式</span>
+              </Link>
+
+              <span className="nav-dot rounded-[2px] hidden sm:inline-block" />
+              <Link
+                href="https://sky-typing.netlify.app/"
+                className="nav-link nes-btn pixel-rounded"
+                target="_blank"
+              >
+                <i className="nes-icon coin is-small pixel-icons" aria-hidden />
+                <span>打字游戏</span>
+              </Link>
+              <span className="nav-dot rounded-[2px] hidden sm:inline-block" />
+              <Link
+                href="https://piggyblog.xyz/"
+                className="nav-link nes-btn pixel-rounded"
+                target="_blank"
+              >
+                <i
+                  className="nes-icon star  is-small pixel-icons"
+                  aria-hidden
+                />
+                <span>我的主页</span>
               </Link>
             </div>
           </nav>

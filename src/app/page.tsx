@@ -13,9 +13,11 @@ export default function Home() {
         </div>
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <div>
-            <h1 className="retro-title text-3xl md:text-4xl leading-tight">
-              RANK GAME
-            </h1>
+            <div className="flex items-center gap-2">
+              <h1 className="retro-title text-3xl md:text-4xl leading-tight">
+                RANK GAME
+              </h1>
+            </div>{" "}
             <p className="mt-3 opacity-80 text-sm md:text-base">
               复古像素风的游戏排行工具：支持 Top
               排行与梯队划分，拖拽即排，导出即分享。
@@ -35,8 +37,8 @@ export default function Home() {
               <i className="nes-icon heart is-large" />
               <i className="nes-icon star is-large" />
             </div>
-            <div className="nes-balloon from-left text-center text-xs opacity-80">
-              选择一种模式开始创建你的榜单
+            <div className="nes-balloon from-left text-center text-xl opacity-80 text-amber-300">
+              WELCOME!
             </div>
           </div>
         </div>
