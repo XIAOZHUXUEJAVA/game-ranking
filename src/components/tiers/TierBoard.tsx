@@ -27,6 +27,10 @@ import { GAME_LIBRARY } from "@/lib/games";
 import { ThumbnailCard } from "@/components/ThumbnailCard";
 import clsx from "clsx";
 
+// 像素描边文字类名
+const pixelText =
+  "relative text-white font-bold tracking-widest text-shadow-black";
+
 function SortableGame({
   game,
   onRemove,
@@ -47,7 +51,7 @@ function SortableGame({
       style={style}
       {...attributes}
       {...listeners}
-      className="cursor-grab active:cursor-grabbing inline-block"
+      className="cursor-grab active:cursor-grabbing inline-block transition-transform duration-150 hover:scale-105 hover:drop-shadow-[2px_2px_0_#000]"
     >
       <ThumbnailCard game={game} onRemove={() => onRemove(game.id)} />
     </div>
@@ -69,21 +73,26 @@ export function TierBoard() {
     []
   );
 
-  // 修复空容器拖入检测
+  // 梯队主题颜色
+  const tierColors: Record<TierId, string> = {
+    T1: "from-pink-400 to-pink-600",
+    T2: "from-yellow-400 to-yellow-600",
+    T3: "from-green-400 to-green-600",
+    T4: "from-blue-400 to-blue-600",
+    T5: "from-purple-400 to-purple-600",
+  };
+
+  // 拖拽碰撞策略
   const collisionStrategy: CollisionDetection = useMemo(() => {
     return (args) => {
       const pointerHits = pointerWithin(args);
-      if (pointerHits.length > 0) {
-        return pointerHits;
-      }
+      if (pointerHits.length > 0) return pointerHits;
       return closestCenter(args);
     };
   }, []);
 
-  const onDragStart = (event: DragStartEvent) => {
+  const onDragStart = (event: DragStartEvent) =>
     setActiveId(String(event.active.id));
-  };
-
   const onDragEnd = (event: DragEndEvent) => {
     setActiveId(null);
     const { active, over } = event;
@@ -122,14 +131,11 @@ export function TierBoard() {
       }
     }
     if (!destTier) return;
-
     if (sourceTier === destTier && sourceIndex === destIndex) return;
-
     if (sourceTier === destTier && destIndex > sourceIndex) destIndex -= 1;
     moveBetweenTiers(sourceTier, destTier, sourceIndex, Math.max(0, destIndex));
   };
 
-  // HTML5 原生拖放
   const GAME_POOL = GAME_LIBRARY as Game[];
   const handleDropOnTier =
     (tier: TierId, index: number | null) =>
@@ -139,11 +145,7 @@ export function TierBoard() {
       e.preventDefault();
       const game = GAME_POOL.find((g) => g.id === id);
       if (!game) return;
-      if (index == null) {
-        insertIntoTier(tier, Number.MAX_SAFE_INTEGER, game);
-      } else {
-        insertIntoTier(tier, index, game);
-      }
+      insertIntoTier(tier, index ?? Number.MAX_SAFE_INTEGER, game);
     };
 
   const handleAllowDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -162,30 +164,51 @@ export function TierBoard() {
     >
       <div className="flex flex-col gap-6">
         {containers.map((tier) => (
-          <div key={tier} className="flex flex-col pixel-rounded">
+          <div key={tier} className="flex flex-col pixel-rounded relative">
             <div
-              className="nes-container with-title"
+              className={clsx(
+                "nes-container with-title relative overflow-hidden border-4 border-black",
+                "bg-gradient-to-br",
+                tierColors[tier],
+                "before:absolute before:inset-0 before:bg-[repeating-linear-gradient(0deg,#000_0_1px,transparent_1px_2px)] before:opacity-10" // CRT扫描线
+              )}
               onDragOver={handleAllowDrop}
               onDrop={handleDropOnTier(tier, null)}
             >
-              <p className="title">{tier}</p>
+              {/* NES 风格像素标题 */}
+              <p
+                className={clsx(
+                  "title px-3 py-1 tracking-widest text-black font-bold relative z-10",
+                  "text-shadow-black",
+                  tier === "T1" && "bg-pink-800",
+                  tier === "T2" && "bg-yellow-800",
+                  tier === "T3" && "bg-green-800",
+                  tier === "T4" && "bg-blue-800",
+                  tier === "T5" && "bg-purple-800",
+                  "border-b-4 border-black"
+                )}
+              >
+                {tier}
+              </p>
+
               <DroppableTier id={tier}>
-                <div className="min-h-40">
+                <div className="min-h-40 py-4">
                   <SortableContext
                     items={tiers[tier].map((g) => g.id)}
                     strategy={rectSortingStrategy}
                   >
                     <div
-                      className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center py-4 select-none"
+                      className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center select-none"
                       id={tier}
                     >
-                      {tiers[tier].length === 0 ? (
-                        <div className="flex items-center justify-center col-span-full">
+                      {tiers[tier].length === 0 && (
+                        <div className="flex items-center justify-center col-span-full animate-pulse">
                           <div className="nes-balloon from-left is-dark text-center text-xs opacity-70">
                             拖拽到此处
                           </div>
                         </div>
-                      ) : null}
+                      )}
+
                       {tiers[tier].map((g, idx) => (
                         <div
                           key={g.id}
@@ -212,6 +235,8 @@ export function TierBoard() {
           </div>
         ))}
       </div>
+
+      {/* 拖拽中的元素 */}
       <DragOverlay
         dropAnimation={{ duration: 150, easing: "cubic-bezier(.2,.8,.2,1)" }}
       >
@@ -238,7 +263,11 @@ function DroppableTier({
   return (
     <div
       ref={setNodeRef}
-      className={clsx(isOver && "outline outline-primary/70")}
+      className={clsx(
+        "transition-all duration-150",
+        isOver &&
+          "outline outline-4 outline-yellow-400 animate-pulse before:absolute before:inset-0 before:bg-yellow-200 before:opacity-20"
+      )}
     >
       {children}
     </div>
