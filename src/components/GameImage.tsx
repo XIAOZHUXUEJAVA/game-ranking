@@ -32,7 +32,7 @@ export function GameImage({
 }: Props) {
   const candidates = useMemo(() => {
     const base = `/covers/${game.id}`;
-    const exts = extensions ?? ["png"];
+    const exts = extensions ?? ["jpg", "png"];
     return exts.map((ext) => `${base}.${ext}`);
   }, [game.id, extensions]);
 

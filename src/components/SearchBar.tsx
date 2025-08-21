@@ -55,7 +55,7 @@ export function SearchBar({
         {results.map((game) => (
           <div key={game.id} className="justify-self-center">
             <div
-              className="cursor-pointer"
+              className="cursor-pointer group relative nes-pointer"
               draggable
               onDragStart={(e) => {
                 e.dataTransfer.setData("application/x-game-id", game.id);
@@ -63,14 +63,9 @@ export function SearchBar({
               }}
               onClick={() => onAdd(game)}
             >
+              {/* 游戏封面 */}
               <div
-                className="text-center text-xs mb-2 truncate"
-                title={game.title}
-              >
-                {game.title}
-              </div>
-              <div
-                className="nes-container is-rounded !p-0 overflow-hidden"
+                className="nes-container is-rounded !p-0 overflow-hidden nes-pointer"
                 style={{
                   width: gridColumns === "two" ? "164px" : "174px",
                   height: "228px",
@@ -83,6 +78,13 @@ export function SearchBar({
                   className="w-full h-full object-cover image-render-pixel block rounded-md"
                   style={{ imageRendering: "pixelated" }}
                 />
+              </div>
+
+              {/* 悬浮显示的游戏名 */}
+              <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-1000">
+                <div className="nes-balloon from-top whitespace-nowrap px-2 py-1 text-xs">
+                  {game.title}
+                </div>
               </div>
             </div>
           </div>
