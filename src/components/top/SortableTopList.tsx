@@ -126,10 +126,11 @@ export function SortableTopList() {
           className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
           onDragOver={allowDrop}
           onDrop={handleDropOnIndex(null)}
+          data-top-games={topGames.map(g => g.id).join(',')}
         >
           {topGames.map((g, idx) => (
             <div
-              key={g.id}
+              key={`${g.id}-${idx}-${topGames.length}`}
               onDragOver={allowDrop}
               onDrop={handleDropOnIndex(idx)}
               className="justify-self-center"

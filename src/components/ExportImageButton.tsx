@@ -18,9 +18,25 @@ export function ExportImageButton({
     if (!targetRef.current) return;
     setLoading(true);
     try {
+      // 强制重新渲染DOM以确保内容更新
+      const timestamp = Date.now();
+      targetRef.current.setAttribute('data-export-timestamp', timestamp.toString());
+      
+      // 强制触发重排和重绘
+      targetRef.current.style.transform = 'translateZ(0)';
+      targetRef.current.offsetHeight; // 强制重排
+      
+      // 等待更长时间确保DOM完全更新
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // 重置transform
+      targetRef.current.style.transform = '';
+      
       const dataUrl = await toPng(targetRef.current, {
         cacheBust: true,
         pixelRatio: 2,
+        skipAutoScale: true,
+        includeQueryParams: true,
         backgroundColor:
           getComputedStyle(document.body).backgroundColor || "#ffffff",
         filter: (node) => {

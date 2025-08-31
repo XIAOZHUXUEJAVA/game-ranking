@@ -5,6 +5,7 @@ import { useRankingStore, getTierGameIds } from "@/store/useRankingStore";
 import { SearchBar } from "@/components/SearchBar";
 import { TierBoard } from "@/components/tiers/TierBoard";
 import { ExportImageButton } from "@/components/ExportImageButton";
+import { PreviewButton } from "@/components/PreviewButton";
 
 export default function TiersPage() {
   const { addToTier, clearTiers } = useRankingStore();
@@ -41,7 +42,8 @@ export default function TiersPage() {
           >
             <TierBoard />
           </div>
-          <div className="print:hidden">
+          <div className="print:hidden flex gap-2">
+            <PreviewButton targetRef={boardRef} />
             <ExportImageButton targetRef={boardRef} filename="tiers.png" />
           </div>
         </div>

@@ -145,6 +145,15 @@ export function TierBoard() {
       e.preventDefault();
       const game = GAME_POOL.find((g) => g.id === id);
       if (!game) return;
+      
+      // 检查游戏是否已经在任何梯队中
+      const allTierIds: TierId[] = ["T1", "T2", "T3", "T4", "T5"];
+      const gameExistsInAnyTier = allTierIds.some(t => 
+        tiers[t].find((g) => g.id === game.id)
+      );
+      
+      if (gameExistsInAnyTier) return;
+      
       insertIntoTier(tier, index ?? Number.MAX_SAFE_INTEGER, game);
     };
 
@@ -199,7 +208,10 @@ export function TierBoard() {
                   >
                     <div
                       className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center select-none"
-                      id={tier}
+                      key={`${tier}-${tiers[tier].map(g => g.id).join('-')}-${tiers[tier].length}-${Date.now()}`}
+                      data-tier={tier}
+                      data-games={tiers[tier].map(g => g.id).join(',')}
+                      data-tier-timestamp={Date.now()}
                     >
                       {tiers[tier].length === 0 && (
                         <div className="flex items-center justify-center col-span-full animate-pulse">

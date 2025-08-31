@@ -81,7 +81,14 @@ export const useRankingStore = create<RankingState>((set, get) => ({
 
   addToTier: (tier, game) =>
     set((state) => {
-      if (state.tiers[tier].find((g) => g.id === game.id)) return state;
+      // 检查所有梯队是否已经包含这个游戏
+      const allTierIds = Object.keys(state.tiers) as TierId[];
+      const gameExistsInAnyTier = allTierIds.some(t => 
+        state.tiers[t].find((g) => g.id === game.id)
+      );
+      
+      if (gameExistsInAnyTier) return state;
+      
       return {
         tiers: { ...state.tiers, [tier]: [...state.tiers[tier], game] },
       };
@@ -89,7 +96,14 @@ export const useRankingStore = create<RankingState>((set, get) => ({
 
   insertIntoTier: (tier, index, game) =>
     set((state) => {
-      if (state.tiers[tier].find((g) => g.id === game.id)) return state;
+      // 检查所有梯队是否已经包含这个游戏
+      const allTierIds = Object.keys(state.tiers) as TierId[];
+      const gameExistsInAnyTier = allTierIds.some(t => 
+        state.tiers[t].find((g) => g.id === game.id)
+      );
+      
+      if (gameExistsInAnyTier) return state;
+      
       const arr = [...state.tiers[tier]];
       const safeIndex = Math.max(0, Math.min(index, arr.length));
       arr.splice(safeIndex, 0, game);

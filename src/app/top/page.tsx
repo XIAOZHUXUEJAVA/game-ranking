@@ -5,6 +5,7 @@ import { useRankingStore, getTopGameIds } from "@/store/useRankingStore";
 import { SearchBar } from "@/components/SearchBar";
 import { SortableTopList } from "@/components/top/SortableTopList";
 import { ExportImageButton } from "@/components/ExportImageButton";
+import { PreviewButton } from "@/components/PreviewButton";
 
 export default function TopPage() {
   const { topMax, setTopMax, addToTop, topGames, clearTop } = useRankingStore();
@@ -123,7 +124,8 @@ export default function TopPage() {
           </h3>
           <SortableTopList />
         </div>
-        <div className="mt-4 print:hidden">
+        <div className="mt-4 print:hidden flex gap-2">
+          <PreviewButton targetRef={containerRef} />
           <ExportImageButton
             targetRef={containerRef}
             filename={`top-${topMax}.png`}
