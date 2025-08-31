@@ -40,6 +40,14 @@ export function PreviewButton({ targetRef }: Props) {
         filter: (node) => {
           if (node instanceof HTMLElement) {
             if (node.getAttribute("aria-label") === "remove") return false;
+            // 隐藏添加游戏按钮
+            if (node.classList.contains("print:hidden")) return false;
+            // 检查父元素是否有 print:hidden 类
+            let parent = node.parentElement;
+            while (parent) {
+              if (parent.classList.contains("print:hidden")) return false;
+              parent = parent.parentElement;
+            }
           }
           return true;
         },

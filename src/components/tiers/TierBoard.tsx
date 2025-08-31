@@ -31,6 +31,24 @@ import clsx from "clsx";
 const pixelText =
   "relative text-white font-bold tracking-widest text-shadow-black";
 
+// 添加游戏按钮组件
+function AddGameButton({ 
+  tierId, 
+  onAddGame 
+}: { 
+  tierId: TierId;
+  onAddGame: (tierId: TierId) => void;
+}) {
+  return (
+    <button
+      className="nes-btn is-primary w-24 h-32 flex flex-col items-center justify-center text-2xl font-bold border-4 border-black hover:scale-105 transition-transform"
+      onClick={() => onAddGame(tierId)}
+    >
+      +
+    </button>
+  );
+}
+
 function SortableGame({
   game,
   onRemove,
@@ -62,6 +80,11 @@ export function TierBoard() {
   const { tiers, removeFromTier, moveBetweenTiers, insertIntoTier } =
     useRankingStore();
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [showDialog, setShowDialog] = useState(false);
+  const [selectedTierId, setSelectedTierId] = useState<TierId>("T1");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -136,7 +159,7 @@ export function TierBoard() {
     moveBetweenTiers(sourceTier, destTier, sourceIndex, Math.max(0, destIndex));
   };
 
-  const GAME_POOL = GAME_LIBRARY as Game[];
+  const GAME_POOL = GAME_LIBRARY as any[];
   const handleDropOnTier =
     (tier: TierId, index: number | null) =>
     (e: React.DragEvent<HTMLDivElement>) => {
@@ -154,7 +177,14 @@ export function TierBoard() {
       
       if (gameExistsInAnyTier) return;
       
-      insertIntoTier(tier, index ?? Number.MAX_SAFE_INTEGER, game);
+      const gameToAdd: Game = {
+        id: game.id,
+        title: game.title,
+        platform: game.platform,
+        year: game.year
+      };
+      
+      insertIntoTier(tier, index ?? Number.MAX_SAFE_INTEGER, gameToAdd);
     };
 
   const handleAllowDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -162,6 +192,60 @@ export function TierBoard() {
       e.preventDefault();
       e.dataTransfer.dropEffect = "copy";
     }
+  };
+
+  const handleAddGame = (tierId: TierId) => {
+    setSelectedTierId(tierId);
+    setShowDialog(true);
+    setSearchQuery("");
+    setSearchResults([]);
+  };
+
+  const handleSearch = async (query: string) => {
+    setSearchQuery(query);
+    if (query.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      // 从游戏库中搜索
+      const results = GAME_LIBRARY.filter((game: any) =>
+        game.title.toLowerCase().includes(query.toLowerCase())
+      ).filter((game: any) => {
+        // 过滤掉已经在任何梯队中的游戏
+        const allTierIds: TierId[] = ["T1", "T2", "T3", "T4", "T5"];
+        return !allTierIds.some(t => 
+          tiers[t].find((g) => g.id === game.id)
+        );
+      }).slice(0, 10); // 限制结果数量
+      
+      setSearchResults(results);
+    } catch (error) {
+      console.error("搜索失败:", error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleSelectGame = (game: any) => {
+    const gameToAdd: Game = {
+      id: game.id,
+      title: game.title,
+      platform: game.platform,
+      year: game.year
+    };
+    insertIntoTier(selectedTierId, tiers[selectedTierId].length, gameToAdd);
+    setShowDialog(false);
+    setSearchQuery("");
+    setSearchResults([]);
+  };
+
+  const closeDialog = () => {
+    setShowDialog(false);
+    setSearchQuery("");
+    setSearchResults([]);
   };
 
   return (
@@ -234,6 +318,12 @@ export function TierBoard() {
                           />
                         </div>
                       ))}
+                      
+                      {/* 添加游戏按钮 */}
+                      <div className="shrink-0 print:hidden">
+                        <AddGameButton tierId={tier} onAddGame={handleAddGame} />
+                      </div>
+                      
                       <div
                         className="h-2 col-span-full"
                         onDragOver={handleAllowDrop}
@@ -260,6 +350,83 @@ export function TierBoard() {
             })()
           : null}
       </DragOverlay>
+
+      {/* 全局添加游戏对话框 */}
+      {showDialog && (
+        <div 
+          className="fixed inset-0 flex items-center justify-center"
+          style={{ zIndex: 9999, backgroundColor: 'rgba(0, 0, 0, 0.3)' }}
+          onClick={closeDialog}
+        >
+          <div 
+            className="nes-dialog is-rounded bg-white p-6 w-96 max-w-lg shadow-2xl"
+            style={{ zIndex: 10000, minHeight: '300px' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <form method="dialog">
+              <p className="title mb-6 text-lg font-bold text-center">🎮 添加游戏到 {selectedTierId}</p>
+              
+              <div className="nes-field mb-6">
+                <label htmlFor="game-search" className="block mb-3 font-semibold">搜索游戏名称:</label>
+                <input
+                  type="text"
+                  id="game-search"
+                  className="nes-input w-full text-base"
+                  value={searchQuery}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  placeholder="输入游戏名称进行搜索..."
+                  autoFocus
+                />
+              </div>
+
+              {isSearching && (
+                <div className="text-center py-6">
+                  <div className="nes-text is-primary">🔍 搜索中...</div>
+                </div>
+              )}
+
+              {searchResults.length > 0 && (
+                <div className="mb-6">
+                  <div className="text-sm text-gray-600 mb-2">找到 {searchResults.length} 个结果:</div>
+                  <div className="max-h-48 overflow-y-auto border-2 border-black p-3 bg-gray-50">
+                    {searchResults.map((game: any) => (
+                      <div
+                        key={game.id}
+                        className="nes-container is-dark p-3 mb-2 cursor-pointer hover:bg-blue-100 transition-colors duration-200"
+                        onClick={() => handleSelectGame(game)}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium">{game.title}</span>
+                          <span className="text-xs text-gray-500">{game.year}</span>
+                        </div>
+                        {game.platform && (
+                          <div className="text-xs text-gray-400 mt-1">{game.platform}</div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {searchQuery.length >= 2 && searchResults.length === 0 && !isSearching && (
+                <div className="text-center py-4 text-gray-500">
+                  <div className="nes-text">😔 未找到相关游戏</div>
+                </div>
+              )}
+
+              <div className="flex justify-end gap-3 mt-6">
+                <button 
+                  className="nes-btn is-error" 
+                  type="button" 
+                  onClick={closeDialog}
+                >
+                  取消
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </DndContext>
   );
 }
