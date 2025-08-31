@@ -27,6 +27,12 @@ import { GAME_LIBRARY } from "@/lib/games";
 import { ThumbnailCard } from "@/components/ThumbnailCard";
 import clsx from "clsx";
 
+// 游戏库中的游戏类型（扩展了基础Game类型）
+interface LibraryGame extends Game {
+  platform?: string;
+  year?: number;
+}
+
 // 像素描边文字类名
 const pixelText =
   "relative text-white font-bold tracking-widest text-shadow-black";
@@ -83,7 +89,7 @@ export function TierBoard() {
   const [showDialog, setShowDialog] = useState(false);
   const [selectedTierId, setSelectedTierId] = useState<TierId>("T1");
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<LibraryGame[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
   const sensors = useSensors(
@@ -159,7 +165,7 @@ export function TierBoard() {
     moveBetweenTiers(sourceTier, destTier, sourceIndex, Math.max(0, destIndex));
   };
 
-  const GAME_POOL = GAME_LIBRARY as any[];
+  const GAME_POOL = GAME_LIBRARY as LibraryGame[];
   const handleDropOnTier =
     (tier: TierId, index: number | null) =>
     (e: React.DragEvent<HTMLDivElement>) => {
@@ -211,9 +217,9 @@ export function TierBoard() {
     setIsSearching(true);
     try {
       // 从游戏库中搜索
-      const results = GAME_LIBRARY.filter((game: any) =>
+      const results = (GAME_LIBRARY as LibraryGame[]).filter((game) =>
         game.title.toLowerCase().includes(query.toLowerCase())
-      ).filter((game: any) => {
+      ).filter((game) => {
         // 过滤掉已经在任何梯队中的游戏
         const allTierIds: TierId[] = ["T1", "T2", "T3", "T4", "T5"];
         return !allTierIds.some(t => 
@@ -229,7 +235,7 @@ export function TierBoard() {
     }
   };
 
-  const handleSelectGame = (game: any) => {
+  const handleSelectGame = (game: LibraryGame) => {
     const gameToAdd: Game = {
       id: game.id,
       title: game.title,
@@ -292,10 +298,9 @@ export function TierBoard() {
                   >
                     <div
                       className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center select-none"
-                      key={`${tier}-${tiers[tier].map(g => g.id).join('-')}-${tiers[tier].length}-${Date.now()}`}
+                      key={`${tier}-${tiers[tier].map(g => g.id).join('-')}-${tiers[tier].length}`}
                       data-tier={tier}
                       data-games={tiers[tier].map(g => g.id).join(',')}
-                      data-tier-timestamp={Date.now()}
                     >
                       {tiers[tier].length === 0 && (
                         <div className="flex items-center justify-center col-span-full animate-pulse">
@@ -389,7 +394,7 @@ export function TierBoard() {
                 <div className="mb-6">
                   <div className="text-sm text-gray-600 mb-2">找到 {searchResults.length} 个结果:</div>
                   <div className="max-h-48 overflow-y-auto border-2 border-black p-3 bg-gray-50">
-                    {searchResults.map((game: any) => (
+                    {searchResults.map((game) => (
                       <div
                         key={game.id}
                         className="nes-container is-dark p-3 mb-2 cursor-pointer hover:bg-blue-100 transition-colors duration-200"
